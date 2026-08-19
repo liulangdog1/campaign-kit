@@ -36,7 +36,7 @@ target-version = "py311"
 select = ["E", "F", "W", "I", "UP", "B", "SIM"]
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.12"
 strict = false
 warn_unused_ignores = true
 disallow_untyped_defs = true

@@ -55,9 +55,7 @@ class Structure:
     def __post_init__(self) -> None:
         pos = np.asarray(self.positions, dtype=float)
         if pos.ndim != 2 or pos.shape[1] != 3 or pos.shape[0] != len(self.species):
-            raise ValueError(
-                f"positions must have shape ({len(self.species)}, 3), got {pos.shape}"
-            )
+            raise ValueError(f"positions must have shape ({len(self.species)}, 3), got {pos.shape}")
         object.__setattr__(self, "positions", pos)
 
     @property
@@ -131,13 +129,11 @@ class LabelResult:
         structure: Structure,
         energy: float,
         forces: np.ndarray | None = None,
-    ) -> "LabelResult":
+    ) -> LabelResult:
         return cls(structure=structure, status=LabelStatus.SUCCEEDED, energy=energy, forces=forces)
 
     @classmethod
-    def failure(
-        cls, structure: Structure, status: LabelStatus, message: str = ""
-    ) -> "LabelResult":
+    def failure(cls, structure: Structure, status: LabelStatus, message: str = "") -> LabelResult:
         if not status.is_failure:
             raise ValueError("failure() requires a failure status")
         return cls(structure=structure, status=status, message=message)
