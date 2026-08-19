@@ -118,6 +118,9 @@ def kabsch_align(
     ``weights`` is a per-atom weight vector of shape (M,); ``None`` means
     uniform. Mass weights make heavy atoms dominate the superposition, which
     is the right choice when the basis itself is mass-weighted.
+
+
+    Algorithm: W. Kabsch, Acta Crystallogr. A 32, 922-923 (1976).
     """
     P = np.asarray(P, dtype=float)
     Q = np.asarray(Q, dtype=float)

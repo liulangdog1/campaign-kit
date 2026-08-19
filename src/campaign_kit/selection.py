@@ -91,6 +91,9 @@ class QueryByCommittee:
     score is local (max over atoms) for the reason given in
     `_local_disagreement`; ties keep pool order, so the ranking is
     deterministic.
+
+    Query-by-committee in the sense of Seung, Opper & Sompolinsky,
+    COLT 1992.
     """
 
     def rank(self, pool: Sequence[Structure], committee: object) -> list[int]:
@@ -114,6 +117,9 @@ class FarthestPointSampling:
     a `reference` set is provided the first pick is instead the pool point
     farthest from the reference (useful for extending an existing training set
     rather than re-covering it) and the rng is not consumed at all.
+
+    Greedy max-min (k-center) selection in the sense of Gonzalez,
+    Theor. Comput. Sci. 38, 293-306 (1985).
     """
 
     def __init__(
