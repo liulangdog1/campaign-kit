@@ -1,5 +1,7 @@
 # campaign-kit
 
+[![CI](https://github.com/liulangdog1/campaign-kit/actions/workflows/ci.yml/badge.svg)](https://github.com/liulangdog1/campaign-kit/actions/workflows/ci.yml)
+
 Active-learning orchestration and coordinate reduction for simulation campaigns whose ground-truth
 labels are expensive batch calculations.
 
@@ -17,7 +19,7 @@ loop also runs on a laptop against an analytic stand-in labeler.
 ## Quickstart
 
 ```sh
-git clone <repository-url> && cd campaign-kit
+git clone https://github.com/liulangdog1/campaign-kit.git && cd campaign-kit
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
 python examples/02_domain_detection.py
