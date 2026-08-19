@@ -47,8 +47,8 @@ beyond r=4.5: spread rises to 0.116 — the committee announces that extrapolati
 ```
 
 (Table abridged; the script prints all 20 rows.) In the gap between the two training windows the
-committee members agree on the same smooth bridge and are wrong together: spread stays at the
-in-window scale while the true error reaches 26x it. Past the outer window the same committee
+committee members agree on the same smooth bridge and are wrong together: spread sits at
+0.033-0.063 (the in-window range is 0.008-0.053) while the true error reaches 2.098. Past the outer window the same committee
 announces its extrapolation loudly. The fence — a geometric criterion calibrated on the training
 set's own spacing — flags every gap row without spending a label, and the demo's closing lines
 show its limit too: one admitted row just past the outer window still carries 8x the median
