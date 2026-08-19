@@ -162,7 +162,7 @@ def main() -> None:
         flag_txt = "-" if is_flagged is None else ("FLAGGED" if is_flagged else "")
         print(
             f"{r:>5.2f} {kind:>9} {dist_txt:>14} {spread:>8.3f} "
-            f"{err:>13.3f} {fence_txt:>7} {flag_txt:>13}"
+            f"{err:>13.3f} {fence_txt:>7} {flag_txt:>13}".rstrip()
         )
 
     gap_idx = [i for i, r in enumerate(query_r) if r < 3.3]
