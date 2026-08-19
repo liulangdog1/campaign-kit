@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
+
+      - name: Install
+        run: pip install -e ".[dev]"
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Format check
+        run: ruff format --check .
+
+      # numpy >= 2.x ships type stubs that use PEP 695 syntax, which mypy rejects
+      # outright when its target python_version is below 3.12 (the pyproject pin is
+      # 3.11 for runtime compatibility). Targeting 3.12 here lets mypy get past the
+      # third-party stubs and actually check first-party sources on both matrix jobs.
+      - name: Type check
+        run: mypy --python-version=3.12 src/
+
+      - name: Tests
+        run: pytest -q
