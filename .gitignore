@@ -27,3 +27,17 @@ checkpoints/
 *.model
 *.png
 *.pdf
+
+# Never publish: agent state, credentials, OS cruft
+.claude/
+CLAUDE.md
+AGENTS.local.md
+.mcp.json
+.env
+.env.*
+*.pem
+*.key
+id_rsa
+id_rsa.*
+.netrc
+.DS_Store
