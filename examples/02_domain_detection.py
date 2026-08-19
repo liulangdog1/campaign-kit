@@ -102,7 +102,9 @@ def main() -> None:
     fence = DomainFence.from_train_quantile(domain, quantile=0.99)
 
     # Rows the models were trained around (accuracy baseline), and query rows:
-    # a scan through the unsampled gap, then past the outer window.
+    # a scan through the unsampled gap, then past the outer window. These six
+    # control rows are what "in-window" means throughout this demo: every "Nx"
+    # figure printed below is against the median of their absolute errors.
     control_r = [1.5, 1.7, 1.85, 3.5, 4.0, 4.4]
     query_r = [2.0, 2.15, 2.3, 2.45, 2.6, 2.75, 2.9, 3.05, 4.8, 5.1, 5.4]
     queries = [two_atom(r) for r in query_r]
@@ -168,6 +170,8 @@ def main() -> None:
     gap_idx = [i for i, r in enumerate(query_r) if r < 3.3]
     beyond_idx = [i for i, r in enumerate(query_r) if r > 4.5]
     print()
+    median_control_err = float(np.median(control_err))
+    gap_ratio = abs_error[gap_idx].max() / median_control_err
     print(
         f"in the gap   : spread {predictions.per_structure_spread[gap_idx].min():.3f}-"
         f"{predictions.per_structure_spread[gap_idx].max():.3f} "
@@ -176,11 +180,15 @@ def main() -> None:
         f"while |error| reaches {abs_error[gap_idx].max():.3f} — SILENT"
     )
     print(
+        f"             : that worst gap error is {gap_ratio:.0f}x the median in-window "
+        f"error ({median_control_err:.3f}); the committee never says so"
+    )
+    print(
         f"beyond r={WINDOW_FAR[1]:.1f}: spread rises to "
         f"{predictions.per_structure_spread[beyond_idx].max():.3f} — the committee "
         f"announces that extrapolation itself"
     )
-    edge_ratio = abs_error[query_r.index(4.8)] / float(np.median(control_err))
+    edge_ratio = abs_error[query_r.index(4.8)] / median_control_err
     print(
         "note the admitted r=4.80 row: it sits just past the outer window, inside the\n"
         f"calibrated threshold, with {edge_ratio:.0f}x the median in-window error — a\n"

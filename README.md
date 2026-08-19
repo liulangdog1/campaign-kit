@@ -45,16 +45,23 @@ training windows: r in [1.0, 1.9] and [3.3, 4.5]  (96 labels)   fence threshold:
  5.40     query         0.0388    0.116         0.442     OUT
 
 in the gap   : spread 0.033-0.063 (in-window scale: 0.008-0.053) while |error| reaches 2.098 — SILENT
+             : that worst gap error is 62x the median in-window error (0.034); the committee never says so
 beyond r=4.5: spread rises to 0.116 — the committee announces that extrapolation itself
 ```
 
+**What "in-window" means here.** Six control rows are evaluated from inside the training windows —
+r = 1.50, 1.70, 1.85, 3.50, 4.00, 4.40. The median of their absolute errors (0.034) is the
+denominator for every `Nx` figure the demo prints, and the range of their committee spreads
+(0.008-0.053) is the "in-window scale" the gap rows are compared against. Both are computed in
+`examples/02_domain_detection.py`; nothing here is hand-derived.
+
 (Table abridged; the script prints all 20 rows.) In the gap between the two training windows the
 committee members agree on the same smooth bridge and are wrong together: spread sits at
-0.033-0.063 (the in-window range is 0.008-0.053) while the true error reaches 2.098. Past the outer window the same committee
-announces its extrapolation loudly. The fence — a geometric criterion calibrated on the training
-set's own spacing — flags every gap row without spending a label, and the demo's closing lines
-show its limit too: one admitted row just past the outer window still carries 8x the median
-in-window error.
+0.033-0.063, inside the in-window scale, while the true error reaches 2.098 — **62x** the median
+in-window error. Past the outer window the same committee announces its extrapolation loudly. The
+fence — a geometric criterion calibrated on the training set's own spacing — flags every gap row
+without spending a label, and the demo's closing lines show its limit too: one admitted row just
+past the outer window still carries 8x the median in-window error.
 
 ## What's here
 
