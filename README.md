@@ -23,34 +23,36 @@ pip install -e ".[dev]"
 python examples/02_domain_detection.py
 ```
 
-Output (a committee trained on the short-range window of a two-atom energy curve, then queried far
-past it — the true curve hides a feature the training window carries no trace of):
+Output (a committee trained on two windows of a two-atom energy curve, then queried in the
+unsampled gap between them and beyond the outer edge):
 
 ```
-training window: r in [1.0, 2.4]  (64 labels)   fence threshold: 0.0387
+training windows: r in [1.0, 1.9] and [3.3, 4.5]  (96 labels)   fence threshold: 0.0256
 
-    r  dist to train   spread  |true error|   fence  silent-check
------------------------------------------------------------------
- 1.20         0.0034    0.071         0.208  inside
- 1.50         0.0105    0.032         0.005  inside
- 2.10         0.0040    0.013         0.000  inside
- 2.30         0.0008    0.036         0.076  inside
- 2.70         0.0528    0.208         0.289     OUT
- 3.00         0.0899    0.312         0.365     OUT
- 3.80         0.1601    0.516         0.478     OUT
- 4.20         0.1851    0.587         2.733     OUT
- 4.70         0.2105    0.661         0.209     OUT
- 5.00         0.2232    0.699         0.116     OUT
+    r       set  dist to train   spread  |true error|   fence  silent-check
+---------------------------------------------------------------------------
+ 1.50 train-win             ~0    0.028         0.016       -             -
+ 1.85 train-win             ~0    0.026         0.044       -             -
+ 2.30     query         0.0982    0.046         0.254     OUT       FLAGGED
+ 2.45     query         0.1107    0.049         1.359     OUT       FLAGGED
+ 2.60     query         0.0872    0.054         2.098     OUT       FLAGGED
+ 2.90     query         0.0474    0.061         0.224     OUT
+ 3.50 train-win             ~0    0.053         0.158       -             -
+ 4.40 train-win             ~0    0.046         0.152       -             -
+ 4.80     query         0.0156    0.078         0.278  inside
+ 5.40     query         0.0388    0.116         0.442     OUT
 
-inside the fence : median spread 0.034, worst |error| 0.208
-outside the fence: max spread    0.699, worst |error| 2.733 (13x the worst in-domain error)
+in the gap   : spread 0.033-0.063 (in-window scale: 0.008-0.053) while |error| reaches 2.098 — SILENT
+beyond r=4.5: spread rises to 0.116 — the committee announces that extrapolation itself
 ```
 
-(Table abridged; the script prints all 14 query rows.) Committee spread grows smoothly with
-distance and carries no hint of the hidden feature near r = 4.2, where the true error jumps an
-order of magnitude above its neighbours at essentially the same spread. The fence — a geometric
-criterion calibrated on the training set's own spacing — rejects every extrapolating row before
-any label is spent.
+(Table abridged; the script prints all 20 rows.) In the gap between the two training windows the
+committee members agree on the same smooth bridge and are wrong together: spread stays at the
+in-window scale while the true error reaches 26x it. Past the outer window the same committee
+announces its extrapolation loudly. The fence — a geometric criterion calibrated on the training
+set's own spacing — flags every gap row without spending a label, and the demo's closing lines
+show its limit too: one admitted row just past the outer window still carries 8x the median
+in-window error.
 
 ## What's here
 
